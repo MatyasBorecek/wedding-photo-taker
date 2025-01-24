@@ -1,7 +1,7 @@
-import {PhotoDAO} from '../dao/photo';
-import {UserDAO} from '../dao/user';
-import {ApiError} from '../error/api';
-import {IPhoto} from '../model/photo';
+import {PhotoDAO} from '../dao/photo.js';
+import {UserDAO} from '../dao/user.js';
+import {ApiError} from '../error/api.js';
+import {IPhoto} from '../model/photo.js';
 import {Schema} from 'mongoose';
 
 export class PhotoService {

@@ -12,4 +12,4 @@ const envSchema = z.object({
   MAX_FILE_SIZE: z.string().default('10485760') // 10MB
 });
 
-export const config = envSchema.parse(process.env);
+export const appConfig = envSchema.parse(process.env);

@@ -1,4 +1,4 @@
-import {Photo, IPhoto} from '../model/photo';
+import {Photo, IPhoto} from '../model/photo.js';
 
 export class PhotoDAO {
   async create(photoData: Partial<IPhoto>): Promise<IPhoto> {

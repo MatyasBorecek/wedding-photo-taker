@@ -1,4 +1,4 @@
-import {User, IUser} from '../model/user';
+import {User, IUser} from '../model/user.js';
 
 export class UserDAO {
   async findOrCreate(deviceId: string, name?: string): Promise<IUser> {

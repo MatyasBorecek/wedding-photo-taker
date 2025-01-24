@@ -1,7 +1,7 @@
-import {sign} from "jsonwebtoken";
-import {UserDAO} from '../dao/user';
-import {config} from '../config';
-import {ApiError} from '../error/api';
+import jwt from "jsonwebtoken";
+import {UserDAO} from '../dao/user.js';
+import {appConfig} from '../config/index.js';
+import {ApiError} from '../error/api.js';
 
 export class AuthService {
   private _userDao = new UserDAO();
@@ -12,9 +12,9 @@ export class AuthService {
   }
 
   private generateToken(user: any) {
-    return sign(
+    return jwt.sign(
         {id: user._id, role: user.role},
-        config.JWT_SECRET,
+        appConfig.JWT_SECRET,
         {expiresIn: '7d'}
     );
   }
