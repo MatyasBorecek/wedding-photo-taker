@@ -29,6 +29,7 @@ const photoController = new PhotoController();
 
 app.post('/api/auth/register', authController.registerDevice);
 app.get('/api/auth/me', authMiddleware, authController.getCurrentUser);
+app.get('/api/auth/check-registration', authController.checkRegistration);
 
 app.post('/api/photos',
     authMiddleware,
@@ -39,7 +40,6 @@ app.post('/api/photos',
 app.get('/api/photos', authMiddleware, photoController.listPhotos);
 app.delete('/api/photos/:id', authMiddleware, photoController.deletePhoto);
 app.patch('/api/photos/:id', authMiddleware, photoController.updatePhoto);
-
 // Admin routes
 app.get('/api/admin/photos', authMiddleware, adminMiddleware, photoController.listPhotos);
 app.patch('/api/admin/photos/:id', authMiddleware, adminMiddleware, photoController.updatePhoto);

@@ -24,4 +24,14 @@ export class AuthService {
     if (!user) throw new ApiError('User not found', 404);
     return user;
   }
+
+  async checkRegistration(token: string) {
+    try {
+      const decoded = jwt.verify(token, appConfig.JWT_SECRET) as any;
+      const user = await this._userDao.findById(decoded.id);
+      return !!user;
+    } catch (err) {
+      return false;
+    }
+  }
 }

@@ -25,4 +25,24 @@ export class AuthController {
     const user = await this._authService.validateUser(req.user.id);
     res.json(user);
   }
+
+  async checkRegistration(req: Request, res: Response) {
+    try {
+      if (!isAuthenticatedRequest(req)) {
+        throw new ApiError('Device not registered', 401);
+      }
+
+      const user = await this._authService.validateUser(req.user.id);
+      res.json({
+        registered: true,
+        user: {
+          id: user._id,
+          name: user.name,
+          role: user.role
+        }
+      });
+    } catch (err) {
+      res.json({registered: false});
+    }
+  }
 }
