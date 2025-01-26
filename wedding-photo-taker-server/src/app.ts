@@ -38,9 +38,11 @@ app.post('/api/photos',
 
 app.get('/api/photos', authMiddleware, photoController.listPhotos);
 app.delete('/api/photos/:id', authMiddleware, photoController.deletePhoto);
+app.patch('/api/photos/:id', authMiddleware, photoController.updatePhoto);
 
 // Admin routes
 app.get('/api/admin/photos', authMiddleware, adminMiddleware, photoController.listPhotos);
+app.patch('/api/admin/photos/:id', authMiddleware, adminMiddleware, photoController.updatePhoto);
 
 // Error handling
 app.use(errorHandler);
