@@ -18,4 +18,12 @@ export class PhotoDAO {
     const result = await Photo.deleteOne({_id: photoId, owner: ownerId});
     return result.deletedCount > 0;
   }
+
+  async updatePhoto(photoId: string, ownerId: string, isPublic: boolean): Promise<IPhoto | null> {
+    return Photo.findOneAndUpdate(
+        {_id: photoId, owner: ownerId},
+        {$set: {isPublic}},
+        {new: true}
+    );
+  }
 }

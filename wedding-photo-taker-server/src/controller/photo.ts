@@ -46,4 +46,18 @@ export class PhotoController {
 
     res.json({success});
   }
+
+  async updatePhoto(req: Request, res: Response) {
+    if (!isAuthenticatedRequest(req)) {
+      return new ApiError('Invalid request', 401);
+    }
+
+    const photo = await this._photoService.updatePhoto(
+        req.params.id,
+        req.user.id,
+        req.body.isPublic
+    );
+
+    res.json(photo);
+  }
 }

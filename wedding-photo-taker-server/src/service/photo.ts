@@ -32,4 +32,10 @@ export class PhotoService {
   async deletePhoto(photoId: string, userId: string) {
     return this._photoDao.deleteById(photoId, userId);
   }
+
+  async updatePhoto(photoId: string, userId: string, isPublic: boolean) {
+    const photo = await this._photoDao.updatePhoto(photoId, userId, isPublic);
+    if (!photo) throw new ApiError('Photo not found', 404);
+    return photo;
+  }
 }
