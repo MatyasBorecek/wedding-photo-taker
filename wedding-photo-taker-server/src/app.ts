@@ -3,12 +3,13 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import {appConfig} from './config/index.js';
-import {AuthController} from './controller/auth.js';
-import {PhotoController} from './controller/photo.js';
-import {authMiddleware, adminMiddleware} from './middleware/auth.js';
-import {storageMiddleware} from './helper/storage.js';
-import {errorHandler} from './middleware/error.js';
+import path from 'path';
+import { appConfig } from './config/index.js';
+import { AuthController } from './controller/auth.js';
+import { PhotoController } from './controller/photo.js';
+import { authMiddleware, adminMiddleware } from './middleware/auth.js';
+import { storageMiddleware } from './helper/storage.js';
+import { errorHandler } from './middleware/error.js';
 
 const app = express();
 
@@ -16,12 +17,22 @@ const app = express();
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: "http://localhost:3000", // Localhost
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 }));
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.static(appConfig.UPLOAD_DIR));
+
+// Serve static uploads folder with proper CORS settings
+app.use("/uploads", express.static(path.join(appConfig.UPLOAD_DIR), {
+  setHeaders: (res) => {
+    res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.set("Access-Control-Allow-Credentials", "true");
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+  }
+}));
 
 // Routes
 const authController = new AuthController();
@@ -40,6 +51,7 @@ app.post('/api/photos',
 app.get('/api/photos', authMiddleware, photoController.listPhotos);
 app.delete('/api/photos/:id', authMiddleware, photoController.deletePhoto);
 app.patch('/api/photos/:id', authMiddleware, photoController.updatePhoto);
+
 // Admin routes
 app.get('/api/admin/photos', authMiddleware, adminMiddleware, photoController.listPhotos);
 app.patch('/api/admin/photos/:id', authMiddleware, adminMiddleware, photoController.updatePhoto);
