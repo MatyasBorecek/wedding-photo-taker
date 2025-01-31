@@ -1,9 +1,9 @@
-import {Schema, model, Document} from 'mongoose';
+import {Types, model, Document, Schema} from 'mongoose';
 
 export interface IPhoto extends Document {
   fileName: string;
   originalName: string;
-  owner: Schema.Types.ObjectId;
+  owner: Types.ObjectId | String;
   isPublic: boolean;
   createdAt: Date;
 }
@@ -11,7 +11,7 @@ export interface IPhoto extends Document {
 const PhotoSchema = new Schema<IPhoto>({
   fileName: {type: String, required: true},
   originalName: {type: String, required: true},
-  owner: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+  owner: {type: Types.ObjectId, ref: 'User', required: true},
   isPublic: {type: Boolean, default: false},
   createdAt: {type: Date, default: Date.now}
 });

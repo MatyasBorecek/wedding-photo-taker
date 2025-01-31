@@ -1,4 +1,3 @@
-// src/pages/Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Container, Typography, Box } from '@mui/material';

@@ -2,7 +2,7 @@ import {PhotoDAO} from '../dao/photo.js';
 import {UserDAO} from '../dao/user.js';
 import {ApiError} from '../error/api.js';
 import {IPhoto} from '../model/photo.js';
-import {Schema} from 'mongoose';
+import {Types} from 'mongoose';
 
 export class PhotoService {
   private _photoDao = new PhotoDAO();
@@ -15,7 +15,7 @@ export class PhotoService {
     return this._photoDao.create({
       fileName: file.filename,
       originalName: file.originalname,
-      owner: new Schema.Types.ObjectId(userId),
+      owner: new Types.ObjectId(userId),
       isPublic
     });
   }

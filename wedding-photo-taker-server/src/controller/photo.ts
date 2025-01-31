@@ -2,62 +2,67 @@ import {Response, Request} from 'express';
 import {PhotoService} from '../service/photo.js';
 import {ApiError} from '../error/api.js';
 import {isAuthenticatedRequest} from "../helper/jwt.js";
-
+import AuthenticatedRequest from "../interface/authenticated-request";
 
 export class PhotoController {
   private _photoService = new PhotoService();
 
-  async uploadPhoto(req: Request, res: Response) {
-    if (!isAuthenticatedRequest(req)) {
+  uploadPhoto = async (req: Request, res: Response) => {
+    if (!await isAuthenticatedRequest(req)) {
       return new ApiError('Invalid request obtained', 401);
     }
 
-    if (!req.file) {
+    const authReq = req as AuthenticatedRequest;
+    if (!authReq.file) {
       throw new ApiError('No file uploaded', 400);
     }
 
     const photo = await this._photoService.uploadPhoto(
-        req.user.id,
-        req.file,
-        req.body.isPublic === 'true'
+        authReq.user.id,
+        authReq.file,
+        authReq.body.isPublic === 'true'
     );
 
     res.status(201).json(photo);
-  }
+  };
 
-  async listPhotos(req: Request, res: Response) {
-    if (!isAuthenticatedRequest(req)) {
+  listPhotos = async (req: Request, res: Response) => {
+    if (!await isAuthenticatedRequest(req)) {
       return new ApiError('Invalid request obtained', 401);
     }
 
-    const photos = await this._photoService.getPhotos(req.user.id);
+    const authReq = req as AuthenticatedRequest;
+    const photos = await this._photoService.getPhotos(authReq.user.id);
     res.json(photos);
-  }
+  };
 
-  async deletePhoto(req: Request, res: Response) {
-    if (!isAuthenticatedRequest(req)) {
+  deletePhoto = async (req: Request, res: Response) => {
+    if (!await isAuthenticatedRequest(req)) {
       return new ApiError('Invalid request obtained', 401);
     }
 
+    const authReq = req as AuthenticatedRequest;
     const success = await this._photoService.deletePhoto(
-        req.params.id,
-        req.user.id
+        authReq.params.id,
+        authReq.user.id
     );
 
     res.json({success});
-  }
+  };
 
-  async updatePhoto(req: Request, res: Response) {
-    if (!isAuthenticatedRequest(req)) {
+  updatePhoto = async (req: Request, res: Response) => {
+    if (!await isAuthenticatedRequest(req)) {
       return new ApiError('Invalid request', 401);
     }
 
+    const authReq = req as AuthenticatedRequest;
     const photo = await this._photoService.updatePhoto(
-        req.params.id,
-        req.user.id,
-        req.body.isPublic
+        authReq.params.id,
+        authReq.user.id,
+        authReq.body.isPublic
     );
 
     res.json(photo);
-  }
+  };
 }
+

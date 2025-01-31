@@ -2,11 +2,12 @@ import {Request, Response} from 'express';
 import {AuthService} from '../service/auth.js';
 import {ApiError} from '../error/api.js';
 import {isAuthenticatedRequest} from "../helper/jwt.js";
+import AuthenticatedRequest from "../interface/authenticated-request";
 
 export class AuthController {
-  private _authService = new AuthService();
+  private readonly _authService = new AuthService();
 
-  async registerDevice(req: Request, res: Response) {
+  registerDevice = async (req: Request, res: Response) => {
     const {deviceId, name} = req.body;
 
     if (!deviceId) {
@@ -17,22 +18,23 @@ export class AuthController {
     res.json({token});
   }
 
-  async getCurrentUser(req: Request, res: Response) {
-    if (!isAuthenticatedRequest(req)) {
-      return new ApiError('Invalid request obtained', 401);
+  getCurrentUser = async (req: Request, res: Response) => {
+    if (!await isAuthenticatedRequest(req)) {
+      throw new ApiError('Invalid request obtained', 401);
     }
-
-    const user = await this._authService.validateUser(req.user.id);
+    const authReq = req as AuthenticatedRequest;
+    const user = await this._authService.validateUser(authReq.user.id);
     res.json(user);
   }
 
-  async checkRegistration(req: Request, res: Response) {
+  checkRegistration = async (req: Request, res: Response) => {
     try {
-      if (!isAuthenticatedRequest(req)) {
+      if (!await isAuthenticatedRequest(req)) {
         throw new ApiError('Device not registered', 401);
       }
 
-      const user = await this._authService.validateUser(req.user.id);
+      const authReq = req as AuthenticatedRequest;
+      const user = await this._authService.validateUser(authReq.user.id);
       res.json({
         registered: true,
         user: {

@@ -1,10 +1,20 @@
 import {Photo, IPhoto} from '../model/photo.js';
+import mongoose from "mongoose";
 
 export class PhotoDAO {
   async create(photoData: Partial<IPhoto>): Promise<IPhoto> {
-    const photo = new Photo(photoData);
+    const formattedData = {
+      ...photoData,
+      owner:
+          typeof photoData.owner === 'string' ?
+              new mongoose.Types.ObjectId(photoData.owner) :
+              photoData.owner
+    };
+
+    const photo = new Photo(formattedData);
     return photo.save();
   }
+
 
   async findByOwner(ownerId: string): Promise<IPhoto[]> {
     return Photo.find({owner: ownerId});

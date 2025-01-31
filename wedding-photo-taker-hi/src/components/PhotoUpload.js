@@ -2,19 +2,20 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box, Button, Typography, Switch, FormControlLabel, Alert, LinearProgress } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 import { uploadPhoto } from '../api/ApiHelper';
 
-const DropzoneContainer = styled.div`
-  border: 2px dashed ${({ theme }) => theme.palette.primary.main};
-  border-radius: 8px;
-  padding: 2rem;
-  text-align: center;
-  cursor: pointer;
-  background-color: ${({ theme, isDragActive }) =>
-      isDragActive ? theme.palette.action.hover : 'transparent'};
-  margin: 1rem 0;
-`;
+const DropzoneContainer = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'isDragActive',
+})(({ theme, isDragActive }) => ({
+  border: `2px dashed ${theme.palette.primary.main}`,
+  borderRadius: 8,
+  padding: '2rem',
+  textAlign: 'center',
+  cursor: 'pointer',
+  backgroundColor: isDragActive ? theme.palette.action.hover : 'transparent',
+  margin: '1rem 0',
+}));
 
 const PhotoUpload = () => {
   const [isPublic, setIsPublic] = useState(true);
@@ -37,7 +38,11 @@ const PhotoUpload = () => {
         });
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Upload failed');
+      // Properly handle error object
+      const errorMessage = err.response?.data?.message ||
+        err.message ||
+        'Upload failed';
+      setError(errorMessage); // Store just the message string
     } finally {
       setUploading(false);
       setProgress(0);
