@@ -1,0 +1,11 @@
+# Ignore environment files
+.env
+
+# Ignore compiled output
+/dist
+
+# Ignore node_modules
+/node_modules
+
+# Ignore uploaded files
+/uploads
