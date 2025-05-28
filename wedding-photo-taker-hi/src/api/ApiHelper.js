@@ -6,7 +6,7 @@ const getDeviceId = () => {
   let deviceId = Cookies.get('deviceId');
   if (!deviceId) {
     deviceId = uuidv4();
-    Cookies.set('deviceId', deviceId, { expires:365 });
+    Cookies.set('deviceId', deviceId, { expires: 365 });
   }
   return deviceId;
 };

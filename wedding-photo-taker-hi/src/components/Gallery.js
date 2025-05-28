@@ -46,7 +46,9 @@ const Gallery = () => {
   }, []);
 
   const handleDeleteConfirm = async () => {
-    if (!deleteId) return;
+    if (!deleteId) {
+      return;
+    }
     try {
       await deletePhoto(deleteId);
       setPhotos(prevPhotos => prevPhotos.filter(photo => photo._id !== deleteId));
@@ -83,32 +85,35 @@ const Gallery = () => {
   return (
     <GalleryContainer>
       <Grid container spacing={3}>
-        {photos.map((photo) => (
-          <Grid item xs={12} sm={6} md={4} key={photo._id}>
-            <StyledCard>
-              <ImageContainer
-                image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
-                alt={photo.originalName}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
-                }}
-              />
-              <CardActions>
-                <Button 
-                  size="small" 
-                  color="error" 
-                  onClick={() => setDeleteId(photo._id)}
-                >
-                  Delete
-                </Button>
-                <Typography variant="caption" color="textSecondary" sx={{ ml: 'auto' }}>
-                  {photo.isPublic ? 'Public' : 'Private'}
-                </Typography>
-              </CardActions>
-            </StyledCard>
-          </Grid>
-        ))}
+        {photos.map((photo) => {
+          console.log((photo))
+          return (
+            <Grid item xs={12} sm={6} md={4} key={photo._id}>
+              <StyledCard>
+                <ImageContainer
+                  image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
+                  alt={photo.originalName}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
+                  }}
+                />
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => setDeleteId(photo._id)}
+                  >
+                    Delete
+                  </Button>
+                  <Typography variant="caption" color="textSecondary" sx={{ ml: 'auto' }}>
+                    {photo.isPublic ? 'Public' : 'Private'}
+                  </Typography>
+                </CardActions>
+              </StyledCard>
+            </Grid>
+          )
+        })}
       </Grid>
 
       <Dialog open={!!deleteId} onClose={() => setDeleteId(null)}>

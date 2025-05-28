@@ -1,8 +1,8 @@
-import { PhotoDAO } from '../dao/photo.js';
-import { UserDAO } from '../dao/user.js';
-import { ApiError } from '../error/api.js';
-import { IPhoto } from '../model/photo.js';
-import { Types } from 'mongoose';
+import {PhotoDAO} from '../dao/photo.js';
+import {UserDAO} from '../dao/user.js';
+import {ApiError} from '../error/api.js';
+import {IPhoto} from '../model/photo.js';
+import {Types} from 'mongoose';
 
 export class PhotoService {
   private _photoDao = new PhotoDAO();

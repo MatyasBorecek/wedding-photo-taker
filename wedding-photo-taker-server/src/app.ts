@@ -4,12 +4,12 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import { appConfig } from './config/index.js';
-import { AuthController } from './controller/auth.js';
-import { PhotoController } from './controller/photo.js';
-import { authMiddleware, adminMiddleware } from './middleware/auth.js';
-import { storageMiddleware } from './helper/storage.js';
-import { errorHandler } from './middleware/error.js';
+import {appConfig} from './config/index.js';
+import {AuthController} from './controller/auth.js';
+import {PhotoController} from './controller/photo.js';
+import {authMiddleware, adminMiddleware} from './middleware/auth.js';
+import {storageMiddleware} from './helper/storage.js';
+import {errorHandler} from './middleware/error.js';
 
 const app = express();
 
