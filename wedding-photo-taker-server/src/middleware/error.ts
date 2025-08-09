@@ -1,15 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import {ApiError} from '../error/api.js';
 import {appConfig} from '../config/index.js';
-import winston from 'winston';
-
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({filename: 'error.log', level: 'error'}),
-  ],
-});
+import logger from '../utils/logger.js';
 
 export const errorHandler = (
     err: Error,
@@ -44,13 +36,28 @@ export const errorHandler = (
     message = 'Invalid JSON';
   }
 
-  // Log only server errors
+  // Log errors with appropriate levels
   if (statusCode >= 500) {
-    logger.error({
-      message: err.message,
+    // Server errors
+    logger.errorWithContext(req, `Server Error: ${message}`, {
+      statusCode,
+      details,
       stack: err.stack,
-      url: req.originalUrl,
-      method: req.method,
+      error: err.name
+    });
+  } else if (statusCode >= 400) {
+    // Client errors
+    logger.warnWithContext(req, `Client Error: ${message}`, {
+      statusCode,
+      details,
+      error: err.name
+    });
+  } else {
+    // Other errors
+    logger.infoWithContext(req, `Other Error: ${message}`, {
+      statusCode,
+      details,
+      error: err.name
     });
   }
 

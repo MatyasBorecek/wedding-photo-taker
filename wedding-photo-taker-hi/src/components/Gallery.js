@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Grid, Card, CardMedia, CardActions, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Box } from "@mui/material";
 import styled from "styled-components";
 import { listPhotos, deletePhoto } from "../api/ApiHelper";
+import { useAuth } from '../context/AuthContext';
 
 const GalleryContainer = styled.div`
   padding: 2rem 0;
@@ -21,11 +22,16 @@ const ImageContainer = styled(CardMedia)`
   background-position: center;
 `;
 
+const PAGE_SIZE = 9;
+
 const Gallery = () => {
+  const { user } = useAuth();
   const [photos, setPhotos] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const loader = useRef();
 
   useEffect(() => {
     const loadPhotos = async () => {
@@ -41,9 +47,20 @@ const Gallery = () => {
         setLoading(false);
       }
     };
-
     loadPhotos();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!loader.current) return;
+      const rect = loader.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight && photos.length > page * PAGE_SIZE) {
+        setPage((p) => p + 1);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [photos, page]);
 
   const handleDeleteConfirm = async () => {
     if (!deleteId) {
@@ -85,11 +102,16 @@ const Gallery = () => {
   return (
     <GalleryContainer>
       <Grid container spacing={3}>
-        {photos.map((photo) => {
-          console.log((photo))
-          return (
-            <Grid item xs={12} sm={6} md={4} key={photo._id}>
-              <StyledCard>
+        {photos.slice(0, page * PAGE_SIZE).map((photo) => (
+          <Grid item xs={12} sm={6} md={4} key={photo._id}>
+            <StyledCard>
+              {photo.fileName && (photo.fileName.match(/\.(mp4|mov|webm)$/i)) ? (
+                <video
+                  src={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
+                  controls
+                  style={{ width: '100%', borderRadius: 8, background: '#000' }}
+                />
+              ) : (
                 <ImageContainer
                   image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
                   alt={photo.originalName}
@@ -98,7 +120,9 @@ const Gallery = () => {
                     e.target.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
                   }}
                 />
-                <CardActions>
+              )}
+              <CardActions>
+                {(user && (user.role === 'admin' || user._id === photo.owner?._id)) && (
                   <Button
                     size="small"
                     color="error"
@@ -106,15 +130,17 @@ const Gallery = () => {
                   >
                     Delete
                   </Button>
-                  <Typography variant="caption" color="textSecondary" sx={{ ml: 'auto' }}>
-                    {photo.isPublic ? 'Public' : 'Private'}
-                  </Typography>
-                </CardActions>
-              </StyledCard>
-            </Grid>
-          )
-        })}
+                )}
+                <Typography variant="caption" color="textSecondary" sx={{ ml: 'auto' }}>
+                  {photo.isPublic ? 'Public' : 'Private'}
+                </Typography>
+              </CardActions>
+            </StyledCard>
+          </Grid>
+        ))}
       </Grid>
+      {/* Loader div for lazy loading trigger */}
+      <div ref={loader} style={{ height: 20 }} />
 
       <Dialog open={!!deleteId} onClose={() => setDeleteId(null)}>
         <DialogTitle>Confirm Delete</DialogTitle>

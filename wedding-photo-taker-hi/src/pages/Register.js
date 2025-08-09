@@ -21,7 +21,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const { data } = await registerDevice(name);
-      Cookies.set('token', data.token);
+      Cookies.set('token', { expires: 365 });
       navigate('/dashboard');
     } catch (err) {
       alert('Registration failed. Please try again.');

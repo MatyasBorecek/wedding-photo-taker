@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Box, Button, Typography, Switch, FormControlLabel, Alert, LinearProgress } from '@mui/material';
+import { Box, Button, Typography, Switch, FormControlLabel, Alert, LinearProgress, Snackbar } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import { uploadPhoto } from '../api/ApiHelper';
+import logger from '../utils/logger';
 
 const DropzoneContainer = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDragActive',
@@ -21,13 +22,20 @@ const PhotoUpload = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const onDrop = useCallback(async (acceptedFiles) => {
     setError(null);
+    setSuccess(false);
     try {
       setUploading(true);
       for (const file of acceptedFiles) {
+        // Check file size before uploading
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+          throw new Error(`File ${file.name} is too large. Maximum size is 10MB.`);
+        }
+
         await uploadPhoto(file, isPublic, {
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round(
@@ -37,21 +45,27 @@ const PhotoUpload = () => {
           }
         });
       }
+      setProgress(0);
+      setSuccess(true);
+      logger.info('Photos uploaded successfully', { count: acceptedFiles.length });
     } catch (err) {
-      // Properly handle error object
-      const errorMessage = err.response?.data?.message ||
-        err.message ||
-        'Upload failed';
-      setError(errorMessage); // Store just the message string
+      // Log the error with context
+      logger.error('Photo upload failed', {
+        error: err.message,
+        stack: err.stack,
+        files: acceptedFiles.map(f => ({ name: f.name, size: f.size, type: f.type }))
+      });
+
+      // Use the user-friendly message from the API helper if available
+      setError(err.userMessage || err.message || 'Upload failed. Please try again.');
     } finally {
       setUploading(false);
-      setProgress(0);
     }
   }, [isPublic]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: 'image/*,video/*',
     multiple: true
   });
 
@@ -79,7 +93,7 @@ const PhotoUpload = () => {
           {isDragActive ? 'Drop photos here' : 'Drag & drop photos or click to select'}
         </Typography>
         <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
-          Supported formats: JPEG, PNG (Max 10MB per file)
+          Supported formats: Images and videos (Max 10MB per file)
         </Typography>
       </DropzoneContainer>
 
@@ -97,6 +111,16 @@ const PhotoUpload = () => {
           {error}
         </Alert>
       )}
+      <Snackbar
+        open={success}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSuccess(false)} severity="success" sx={{ width: '100%' }}>
+          Upload successful!
+        </Alert>
+      </Snackbar>
 
       <Button
         variant="contained"

@@ -9,3 +9,5 @@
 
 # Ignore uploaded files
 /uploads
+/combined.log
+/error.log
