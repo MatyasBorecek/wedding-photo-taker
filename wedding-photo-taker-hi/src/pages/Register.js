@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Button, 
   TextField, 
-  Container, 
-  Typography, 
+  Typography,
   Box, 
   Paper,
   Fade,
   Alert
  } from '@mui/material';
-import { Camera, Heart, Users } from '@mui/icons-material';
+import { Camera, Star, VerifiedUser } from '@mui/icons-material';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
@@ -97,7 +96,7 @@ const Register = () => {
     
     try {
       const { data } = await registerDevice(name);
-      Cookies.set('token', { expires: 365 });
+      Cookies.set('token', data.token, { expires: 365 });
       navigate('/dashboard');
     } catch (err) {
       setError(err.userMessage || t('auth.registrationFailed'));
@@ -119,10 +118,10 @@ const Register = () => {
               <Camera />
             </Box>
             <Box className="icon">
-              <Heart />
+              <Star />
             </Box>
             <Box className="icon">
-              <Users />
+              <VerifiedUser />
             </Box>
           </IconContainer>
           
