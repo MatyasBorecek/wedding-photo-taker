@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "continue": "Continue",
+    "tryAgain": "Try Again",
+    "refresh": "Refresh"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "gallery": "Gallery",
+    "upload": "Upload",
+    "camera": "Camera",
+    "admin": "Admin"
+  },
+  "auth": {
+    "welcome": "Welcome to Our Wedding!",
+    "welcomeMessage": "Capture and share unforgettable moments from our special day",
+    "enterName": "Enter your name",
+    "yourName": "Your name",
+    "joinCelebration": "Join the Celebration",
+    "registrationFailed": "Registration failed. Please try again.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "unauthorized": "You do not have permission to perform this action.",
+    "loginRequired": "You must be logged in to continue."
+  },
+  "dashboard": {
+    "title": "Wedding Gallery",
+    "subtitle": "Share your most beautiful moments",
+    "uploadPhotos": "Upload Photos",
+    "takePhoto": "Take Photo",
+    "viewGallery": "View Gallery",
+    "welcomeBack": "Welcome back"
+  },
+  "upload": {
+    "title": "Upload Photos",
+    "dragDrop": "Drag & drop photos or click to select",
+    "dragDropActive": "Drop photos here",
+    "selectFiles": "Select Files",
+    "supportedFormats": "Supported formats: Images and videos (Max 10MB per file)",
+    "publicPhoto": "Public Photo",
+    "privatePhoto": "Private Photo",
+    "uploading": "Uploading...",
+    "uploadSuccess": "Upload successful!",
+    "uploadFailed": "Upload failed. Please try again.",
+    "fileTooLarge": "File {{fileName}} is too large. Maximum size is 10MB.",
+    "invalidFormat": "Unsupported file format."
+  },
+  "camera": {
+    "title": "Take Photo",
+    "takePhoto": "Take Photo",
+    "retake": "Retake",
+    "upload": "Upload",
+    "cancel": "Cancel",
+    "photoUploaded": "Photo uploaded successfully!",
+    "cameraError": "Error accessing camera",
+    "permissionDenied": "Camera access denied"
+  },
+  "gallery": {
+    "title": "Wedding Gallery",
+    "noPhotos": "No photos yet. Start by taking or uploading some photos!",
+    "loadingPhotos": "Loading photos...",
+    "loadFailed": "Failed to load photos. Please try again later.",
+    "public": "Public",
+    "private": "Private",
+    "deleteConfirm": "Are you sure you want to delete this photo?",
+    "deleteMessage": "This action cannot be undone.",
+    "deleteSuccess": "Photo deleted successfully",
+    "deleteFailed": "Delete failed",
+    "imageNotFound": "Image Not Found"
+  },
+  "admin": {
+    "title": "Photo Management",
+    "photoManagement": "Admin Photo Management",
+    "photo": "Photo",
+    "originalName": "Original Name",
+    "uploadedBy": "Uploaded By",
+    "uploadDate": "Upload Date",
+    "visibility": "Visibility",
+    "actions": "Actions",
+    "preview": "Preview",
+    "deleteConfirm": "Delete this photo permanently?",
+    "accessDenied": "Access denied. Only administrators can view this page.",
+    "updateFailed": "Update failed",
+    "updateSuccess": "Update successful"
+  },
+  "errors": {
+    "somethingWrong": "Something went wrong",
+    "tryAgainLater": "We're sorry, but there was an error loading this section.",
+    "goHome": "Go to Home Page",
+    "errorDetails": "Error Details (visible in development only):",
+    "networkError": "Network error. Please check your internet connection.",
+    "serverError": "Server error. Please try again later.",
+    "notFound": "The requested resource was not found.",
+    "validationError": "Validation error. Please check your input."
+  },
+  "meta": {
+    "title": "Wedding Photo Gallery",
+    "description": "Capture and share unforgettable moments from our special day"
+  }
+}

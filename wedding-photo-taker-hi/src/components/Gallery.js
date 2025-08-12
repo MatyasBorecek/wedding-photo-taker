@@ -1,30 +1,99 @@
 import { useEffect, useState, useRef } from "react";
-import { Grid, Card, CardMedia, CardActions, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, Box } from "@mui/material";
+import { 
+  Grid, 
+  Card, 
+  CardMedia, 
+  CardActions, 
+  Button, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle, 
+  Typography, 
+  Box,
+  Chip,
+  IconButton,
+  Fade,
+  CircularProgress,
+  Alert
+} from "@mui/material";
+import { 
+  Delete, 
+  Public, 
+  Lock, 
+  PhotoLibrary,
+  Favorite
+} from "@mui/icons-material";
 import styled from "styled-components";
+import { useTranslation } from 'react-i18next';
 import { listPhotos, deletePhoto } from "../api/ApiHelper";
 import { useAuth } from '../context/AuthContext';
 
 const GalleryContainer = styled.div`
-  padding: 2rem 0;
+  padding: 1rem 0;
 `;
 
 const StyledCard = styled(Card)`
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(51, 158, 95, 0.1) !important;
+  
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+    border-color: rgba(51, 158, 95, 0.3) !important;
   }
 `;
 
 const ImageContainer = styled(CardMedia)`
   position: relative;
-  height: 250px;
+  height: 280px;
   background-size: cover;
   background-position: center;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
+  }
+`;
+
+const VideoContainer = styled.div`
+  position: relative;
+  height: 280px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const LoadingContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 2rem;
 `;
 
 const PAGE_SIZE = 9;
 
 const Gallery = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [photos, setPhotos] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
@@ -38,10 +107,10 @@ const Gallery = () => {
       try {
         setLoading(true);
         const { data } = await listPhotos();
-        setPhotos(data);
+        setPhotos(data || []);
         setError(null);
       } catch (err) {
-        setError("Failed to load photos. Please try again later.");
+        setError(t('gallery.loadFailed'));
         console.error("Failed to load photos:", err);
       } finally {
         setLoading(false);
@@ -70,93 +139,206 @@ const Gallery = () => {
       await deletePhoto(deleteId);
       setPhotos(prevPhotos => prevPhotos.filter(photo => photo._id !== deleteId));
     } catch (err) {
-      console.error("Delete failed:", err);
+      console.error(t('gallery.deleteFailed'), err);
     }
     setDeleteId(null);
   };
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <Typography>Loading photos...</Typography>
-      </Box>
+      <LoadingContainer>
+        <CircularProgress size={60} thickness={4} />
+        <Typography variant="h6" color="text.secondary">
+          {t('gallery.loadingPhotos')}
+        </Typography>
+      </LoadingContainer>
     );
   }
 
   if (error) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <Typography color="error">{error}</Typography>
-      </Box>
+      <Alert 
+        severity="error" 
+        sx={{ 
+          borderRadius: 3,
+          '& .MuiAlert-message': {
+            fontSize: '1rem'
+          }
+        }}
+      >
+        {error}
+      </Alert>
     );
   }
 
   if (photos.length === 0) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <Typography>No photos yet. Start by taking or uploading some photos!</Typography>
+      <Box 
+        display="flex" 
+        flexDirection="column"
+        alignItems="center" 
+        justifyContent="center" 
+        minHeight="300px"
+        textAlign="center"
+        sx={{ py: 4 }}
+      >
+        <PhotoLibrary 
+          sx={{ 
+            fontSize: 80, 
+            color: 'primary.300',
+            mb: 2
+          }} 
+        />
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            mb: 1,
+            color: 'text.primary',
+            fontWeight: 500
+          }}
+        >
+          {t('gallery.noPhotos')}
+        </Typography>
+        <Typography 
+          variant="body1" 
+          color="text.secondary"
+          sx={{ maxWidth: 400 }}
+        >
+          {t('gallery.noPhotos')}
+        </Typography>
       </Box>
     );
   }
 
   return (
-    <GalleryContainer>
-      <Grid container spacing={3}>
-        {photos.slice(0, page * PAGE_SIZE).map((photo) => (
-          <Grid item xs={12} sm={6} md={4} key={photo._id}>
-            <StyledCard>
-              {photo.fileName && (photo.fileName.match(/\.(mp4|mov|webm)$/i)) ? (
-                <video
-                  src={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
-                  controls
-                  style={{ width: '100%', borderRadius: 8, background: '#000' }}
-                />
-              ) : (
-                <ImageContainer
-                  image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
-                  alt={photo.originalName}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "https://via.placeholder.com/400x300?text=Image+Not+Found";
-                  }}
-                />
-              )}
-              <CardActions>
-                {(user && (user.role === 'admin' || user._id === photo.owner?._id)) && (
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={() => setDeleteId(photo._id)}
-                  >
-                    Delete
-                  </Button>
-                )}
-                <Typography variant="caption" color="textSecondary" sx={{ ml: 'auto' }}>
-                  {photo.isPublic ? 'Public' : 'Private'}
-                </Typography>
-              </CardActions>
-            </StyledCard>
-          </Grid>
-        ))}
-      </Grid>
-      {/* Loader div for lazy loading trigger */}
-      <div ref={loader} style={{ height: 20 }} />
+    <Fade in timeout={600}>
+      <GalleryContainer>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            textAlign: 'center',
+            mb: 4,
+            color: 'primary.main',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1
+          }}
+        >
+          <Favorite sx={{ color: 'secondary.main' }} />
+          {t('gallery.title')}
+        </Typography>
 
-      <Dialog open={!!deleteId} onClose={() => setDeleteId(null)}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this photo? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteId(null)}>Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </GalleryContainer>
+        <Grid container spacing={3}>
+          {photos.slice(0, page * PAGE_SIZE).map((photo, index) => (
+            <Grid item xs={12} sm={6} md={4} key={photo._id}>
+              <Fade in timeout={400} style={{ transitionDelay: `${index * 100}ms` }}>
+                <StyledCard>
+                  {photo.fileName && (photo.fileName.match(/\.(mp4|mov|webm)$/i)) ? (
+                    <VideoContainer>
+                      <video
+                        src={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
+                        controls
+                        preload="metadata"
+                      />
+                    </VideoContainer>
+                  ) : (
+                    <ImageContainer
+                      image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
+                      alt={photo.originalName}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.style.backgroundImage = `url("https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop")`;
+                      }}
+                    />
+                  )}
+                  
+                  <CardActions sx={{ 
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    px: 2,
+                    py: 1.5
+                  }}>
+                    <Chip
+                      icon={photo.isPublic ? <Public /> : <Lock />}
+                      label={photo.isPublic ? t('gallery.public') : t('gallery.private')}
+                      size="small"
+                      color={photo.isPublic ? "success" : "default"}
+                      variant="outlined"
+                      sx={{ 
+                        fontWeight: 500,
+                        '& .MuiChip-icon': {
+                          fontSize: '1rem'
+                        }
+                      }}
+                    />
+                    
+                    {(user && (user.role === 'admin' || user._id === photo.owner?._id)) && (
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => setDeleteId(photo._id)}
+                        sx={{
+                          '&:hover': {
+                            backgroundColor: 'error.50'
+                          }
+                        }}
+                      >
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    )}
+                  </CardActions>
+                </StyledCard>
+              </Fade>
+            </Grid>
+          ))}
+        </Grid>
+        
+        {/* Loader div for lazy loading trigger */}
+        <div ref={loader} style={{ height: 20 }} />
+
+        <Dialog 
+          open={!!deleteId} 
+          onClose={() => setDeleteId(null)}
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              minWidth: 320
+            }
+          }}
+        >
+          <DialogTitle sx={{ 
+            fontWeight: 600,
+            color: 'error.main'
+          }}>
+            {t('gallery.deleteConfirm')}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText sx={{ fontSize: '1rem' }}>
+              {t('gallery.deleteMessage')}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ p: 2, gap: 1 }}>
+            <Button 
+              onClick={() => setDeleteId(null)}
+              variant="outlined"
+              sx={{ borderRadius: 2 }}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button 
+              onClick={handleDeleteConfirm} 
+              color="error" 
+              variant="contained"
+              sx={{ borderRadius: 2 }}
+            >
+              {t('common.delete')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </GalleryContainer>
+    </Fade>
   );
 };
 

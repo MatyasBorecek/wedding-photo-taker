@@ -1,0 +1,112 @@
+{
+  "common": {
+    "loading": "Načítání...",
+    "error": "Chyba",
+    "success": "Úspěch",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "save": "Uložit",
+    "edit": "Upravit",
+    "close": "Zavřít",
+    "back": "Zpět",
+    "next": "Další",
+    "previous": "Předchozí",
+    "submit": "Odeslat",
+    "continue": "Pokračovat",
+    "tryAgain": "Zkusit znovu",
+    "refresh": "Obnovit"
+  },
+  "navigation": {
+    "home": "Domů",
+    "dashboard": "Přehled",
+    "gallery": "Galerie",
+    "upload": "Nahrát",
+    "camera": "Fotoaparát",
+    "admin": "Administrace"
+  },
+  "auth": {
+    "welcome": "Vítejte na naší svatbě!",
+    "welcomeMessage": "Zachyťte a sdílejte nezapomenutelné okamžiky z našeho velkého dne",
+    "enterName": "Zadejte své jméno",
+    "yourName": "Vaše jméno",
+    "joinCelebration": "Připojit se k oslavě",
+    "registrationFailed": "Registrace se nezdařila. Zkuste to prosím znovu.",
+    "sessionExpired": "Vaše relace vypršela. Přihlaste se prosím znovu.",
+    "unauthorized": "Nemáte oprávnění k provedení této akce.",
+    "loginRequired": "Pro pokračování se musíte přihlásit."
+  },
+  "dashboard": {
+    "title": "Svatební galerie",
+    "subtitle": "Sdílejte své nejkrásnější okamžiky",
+    "uploadPhotos": "Nahrát fotografie",
+    "takePhoto": "Vyfotit",
+    "viewGallery": "Zobrazit galerii",
+    "welcomeBack": "Vítejte zpět"
+  },
+  "upload": {
+    "title": "Nahrát fotografie",
+    "dragDrop": "Přetáhněte fotografie sem nebo klikněte pro výběr",
+    "dragDropActive": "Pusťte fotografie zde",
+    "selectFiles": "Vybrat soubory",
+    "supportedFormats": "Podporované formáty: Obrázky a videa (Max 10MB na soubor)",
+    "publicPhoto": "Veřejná fotografie",
+    "privatePhoto": "Soukromá fotografie",
+    "uploading": "Nahrávání...",
+    "uploadSuccess": "Nahrání bylo úspěšné!",
+    "uploadFailed": "Nahrání se nezdařilo. Zkuste to prosím znovu.",
+    "fileTooLarge": "Soubor {{fileName}} je příliš velký. Maximální velikost je 10MB.",
+    "invalidFormat": "Nepodporovaný formát souboru."
+  },
+  "camera": {
+    "title": "Vyfotit",
+    "takePhoto": "Vyfotit",
+    "retake": "Znovu vyfotit",
+    "upload": "Nahrát",
+    "cancel": "Zrušit",
+    "photoUploaded": "Fotografie byla úspěšně nahrána!",
+    "cameraError": "Chyba při přístupu k fotoaparátu",
+    "permissionDenied": "Přístup k fotoaparátu byl zamítnut"
+  },
+  "gallery": {
+    "title": "Svatební galerie",
+    "noPhotos": "Zatím žádné fotografie. Začněte fotografováním nebo nahráním fotografií!",
+    "loadingPhotos": "Načítání fotografií...",
+    "loadFailed": "Načtení fotografií se nezdařilo. Zkuste to prosím později.",
+    "public": "Veřejné",
+    "private": "Soukromé",
+    "deleteConfirm": "Opravdu chcete tuto fotografii smazat?",
+    "deleteMessage": "Tato akce je nevratná.",
+    "deleteSuccess": "Fotografie byla smazána",
+    "deleteFailed": "Smazání se nezdařilo",
+    "imageNotFound": "Obrázek nenalezen"
+  },
+  "admin": {
+    "title": "Správa fotografií",
+    "photoManagement": "Správa fotografií",
+    "photo": "Fotografie",
+    "originalName": "Původní název",
+    "uploadedBy": "Nahrál",
+    "uploadDate": "Datum nahrání",
+    "visibility": "Viditelnost",
+    "actions": "Akce",
+    "preview": "Náhled",
+    "deleteConfirm": "Smazat tuto fotografii trvale?",
+    "accessDenied": "Přístup zamítnut. Pouze administrátoři mohou zobrazit tuto stránku.",
+    "updateFailed": "Aktualizace se nezdařila",
+    "updateSuccess": "Aktualizace byla úspěšná"
+  },
+  "errors": {
+    "somethingWrong": "Něco se pokazilo",
+    "tryAgainLater": "Je nám líto, ale došlo k chybě při načítání této sekce.",
+    "goHome": "Přejít na domovskou stránku",
+    "errorDetails": "Podrobnosti chyby (viditelné pouze ve vývoji):",
+    "networkError": "Chyba sítě. Zkontrolujte připojení k internetu.",
+    "serverError": "Chyba serveru. Zkuste to prosím později.",
+    "notFound": "Požadovaný zdroj nebyl nalezen.",
+    "validationError": "Chyba ověření. Zkontrolujte zadané údaje."
+  },
+  "meta": {
+    "title": "Svatební fotogalerie",
+    "description": "Zachyťte a sdílejte nezapomenutelné okamžiky z našeho velkého dne"
+  }
+}

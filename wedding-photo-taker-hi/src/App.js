@@ -1,27 +1,23 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider } from './context/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import LanguageProvider from './components/LanguageProvider';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminPanel from './pages/AdminPanel';
+import { theme } from './theme';
 import logger from './utils/logger';
-
-const theme = createTheme({
-  palette: {
-    primary: { main: '#673ab7' },
-    secondary: { main: '#ff4081' }
-  },
-  typography: {
-    fontFamily: "'Playfair Display', serif",
-  },
-});
+import './i18n';
 
 export default function App() {
+  const { t } = useTranslation();
+
   // Log application initialization
   React.useEffect(() => {
     logger.info('Application initialized', { 
@@ -32,38 +28,40 @@ export default function App() {
   return (
     <ErrorBoundary 
       fullPage={true} 
-      message="Something went wrong with the application. Please refresh the page or try again later."
+      message={t('errors.somethingWrong')}
       componentName="App"
     >
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        <BrowserRouter>
-          <AuthProvider>
-            <Routes>
-              <Route path="/" element={
-                <ErrorBoundary componentName="Home">
-                  <Home/>
-                </ErrorBoundary>
-              }/>
-              <Route path="/register" element={
-                <ErrorBoundary componentName="Register">
-                  <Register/>
-                </ErrorBoundary>
-              }/>
-              <Route path="/dashboard" element={
-                <ErrorBoundary componentName="Dashboard">
-                  <Dashboard/>
-                </ErrorBoundary>
-              }/>
-              <Route path="/admin" element={
-                <ErrorBoundary componentName="AdminPanel">
-                  <AdminPanel/>
-                </ErrorBoundary>
-              }/>
-            </Routes>
-          </AuthProvider>
-        </BrowserRouter>
-      </ThemeProvider>
+      <LanguageProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline/>
+          <BrowserRouter>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={
+                  <ErrorBoundary componentName="Home">
+                    <Home/>
+                  </ErrorBoundary>
+                }/>
+                <Route path="/register" element={
+                  <ErrorBoundary componentName="Register">
+                    <Register/>
+                  </ErrorBoundary>
+                }/>
+                <Route path="/dashboard" element={
+                  <ErrorBoundary componentName="Dashboard">
+                    <Dashboard/>
+                  </ErrorBoundary>
+                }/>
+                <Route path="/admin" element={
+                  <ErrorBoundary componentName="AdminPanel">
+                    <AdminPanel/>
+                  </ErrorBoundary>
+                }/>
+              </Routes>
+            </AuthProvider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </LanguageProvider>
     </ErrorBoundary>
   );
 }

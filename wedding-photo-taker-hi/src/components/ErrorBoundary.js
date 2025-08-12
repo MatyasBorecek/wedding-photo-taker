@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Box, Typography, Button, Paper } from '@mui/material';
+import { Box, Typography, Button, Paper, Alert } from '@mui/material';
+import { ErrorOutline, Home, Refresh } from '@mui/icons-material';
 import { logError } from '../utils/logger';
 
 class ErrorBoundary extends Component {
@@ -45,7 +46,7 @@ class ErrorBoundary extends Component {
       return (
         <Box 
           sx={{ 
-            p: 3, 
+            p: { xs: 2, md: 3 }, 
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center',
@@ -56,55 +57,109 @@ class ErrorBoundary extends Component {
           <Paper 
             elevation={3} 
             sx={{ 
-              p: 4, 
-              maxWidth: 600, 
+              p: { xs: 3, md: 4 }, 
+              maxWidth: 500, 
               width: '100%',
-              textAlign: 'center'
+              textAlign: 'center',
+              borderRadius: 3,
+              border: '1px solid',
+              borderColor: 'error.200'
             }}
           >
-            <Typography variant="h5" color="error" gutterBottom>
-              Something went wrong
-            </Typography>
+            <ErrorOutline 
+              sx={{ 
+                fontSize: 64, 
+                color: 'error.main',
+                mb: 2
+              }} 
+            />
             
-            <Typography variant="body1" sx={{ mb: 3 }}>
-              {this.props.message || "We're sorry, but there was an error loading this section."}
-            </Typography>
-            
-            {this.props.showReset && (
-              <Button 
-                variant="contained" 
-                color="primary" 
-                onClick={this.handleReset}
-                sx={{ mr: 2 }}
-              >
-                Try Again
-              </Button>
-            )}
-            
-            <Button 
-              variant="outlined"
-              onClick={() => window.location.href = '/'}
+            <Typography 
+              variant="h4" 
+              sx={{ 
+                color: 'error.main',
+                fontWeight: 600,
+                mb: 2
+              }}
             >
-              Go to Home Page
-            </Button>
+              Něco se pokazilo
+            </Typography>
+            
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                mb: 4,
+                color: 'text.secondary',
+                fontSize: '1.1rem',
+                lineHeight: 1.6
+              }}
+            >
+              {this.props.message || "Je nám líto, ale došlo k chybě při načítání této sekce."}
+            </Typography>
+            
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              {this.props.showReset && (
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={this.handleReset}
+                  startIcon={<Refresh />}
+                  sx={{ 
+                    borderRadius: 2,
+                    px: 3,
+                    py: 1
+                  }}
+                >
+                  Zkusit znovu
+                </Button>
+              )}
+              
+              <Button 
+                variant="outlined"
+                onClick={() => window.location.href = '/'}
+                startIcon={<Home />}
+                sx={{ 
+                  borderRadius: 2,
+                  px: 3,
+                  py: 1,
+                  borderWidth: 2,
+                  '&:hover': {
+                    borderWidth: 2
+                  }
+                }}
+              >
+                Přejít domů
+              </Button>
+            </Box>
             
             {process.env.NODE_ENV !== 'production' && this.state.error && (
-              <Box sx={{ mt: 4, textAlign: 'left' }}>
-                <Typography variant="subtitle2" color="error">
-                  Error Details (visible in development only):
+              <Alert 
+                severity="warning" 
+                sx={{ 
+                  mt: 4, 
+                  textAlign: 'left',
+                  borderRadius: 2
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                  Podrobnosti chyby (viditelné pouze ve vývoji):
                 </Typography>
-                <Typography variant="body2" component="pre" sx={{ 
-                  mt: 1, 
-                  p: 2, 
-                  bgcolor: '#f5f5f5', 
-                  borderRadius: 1,
-                  overflow: 'auto',
-                  maxHeight: '200px'
-                }}>
+                <Typography 
+                  variant="body2" 
+                  component="pre" 
+                  sx={{ 
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                    overflow: 'auto',
+                    maxHeight: '200px',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word'
+                  }}
+                >
                   {this.state.error?.toString()}
                   {this.state.errorInfo?.componentStack}
                 </Typography>
-              </Box>
+              </Alert>
             )}
           </Paper>
         </Box>
