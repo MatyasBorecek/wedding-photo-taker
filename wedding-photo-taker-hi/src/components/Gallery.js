@@ -53,6 +53,8 @@ const ImageContainer = styled(CardMedia)`
   height: 280px;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
+  overflow: hidden;
   
   &::after {
     content: '';
@@ -63,6 +65,38 @@ const ImageContainer = styled(CardMedia)`
     bottom: 0;
     background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
     pointer-events: none;
+  }
+  
+  &:hover::after {
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%);
+  }
+`;
+
+const ImageOverlay = styled(Box)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 2;
+  
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const PhotoModal = styled(Dialog)`
+  .MuiDialog-paper {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 16px !important;
+    overflow: hidden;
   }
 `;
 
@@ -100,6 +134,8 @@ const Gallery = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
   const loader = useRef();
 
   useEffect(() => {
@@ -142,6 +178,16 @@ const Gallery = () => {
       console.error(t('gallery.deleteFailed'), err);
     }
     setDeleteId(null);
+  };
+
+  const handlePhotoClick = (photo) => {
+    setSelectedPhoto(photo);
+    setPhotoModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setPhotoModalOpen(false);
+    setSelectedPhoto(null);
   };
 
   if (loading) {
@@ -241,17 +287,38 @@ const Gallery = () => {
                         src={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
                         controls
                         preload="metadata"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handlePhotoClick(photo)}
                       />
                     </VideoContainer>
                   ) : (
-                    <ImageContainer
-                      image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
-                      alt={photo.originalName}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.style.backgroundImage = `url("https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop")`;
-                      }}
-                    />
+                    <Box sx={{ position: 'relative' }}>
+                      <ImageContainer
+                        image={`${process.env.REACT_APP_API_URL}/uploads/${photo.fileName}`}
+                        alt={photo.originalName}
+                        onClick={() => handlePhotoClick(photo)}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.style.backgroundImage = `url("https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop")`;
+                        }}
+                      />
+                      <ImageOverlay onClick={() => handlePhotoClick(photo)}>
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            color: 'white',
+                            fontWeight: 600,
+                            textAlign: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1
+                          }}
+                        >
+                          <PhotoLibrary />
+                          {t('gallery.viewFullSize')}
+                        </Typography>
+                      </ImageOverlay>
+                    </Box>
                   )}
                   
                   <CardActions sx={{ 
@@ -297,6 +364,84 @@ const Gallery = () => {
         
         {/* Loader div for lazy loading trigger */}
         <div ref={loader} style={{ height: 20 }} />
+
+        {/* Photo Modal */}
+        <PhotoModal 
+          open={photoModalOpen} 
+          onClose={handleCloseModal}
+          maxWidth={false}
+        >
+          {selectedPhoto && (
+            <Box sx={{ position: 'relative' }}>
+              <IconButton
+                onClick={handleCloseModal}
+                sx={{
+                  position: 'absolute',
+                  top: 16,
+                  right: 16,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  color: 'white',
+                  zIndex: 10,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)'
+                  }
+                }}
+              >
+                <Box component="span" sx={{ fontSize: '1.5rem' }}>×</Box>
+              </IconButton>
+              
+              {selectedPhoto.fileName && selectedPhoto.fileName.match(/\.(mp4|mov|webm)$/i) ? (
+                <video
+                  src={`${process.env.REACT_APP_API_URL}/uploads/${selectedPhoto.fileName}`}
+                  controls
+                  autoPlay
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto',
+                    maxHeight: '80vh',
+                    display: 'block'
+                  }}
+                />
+              ) : (
+                <img
+                  src={`${process.env.REACT_APP_API_URL}/uploads/${selectedPhoto.fileName}`}
+                  alt={selectedPhoto.originalName}
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto',
+                    maxHeight: '80vh',
+                    display: 'block'
+                  }}
+                />
+              )}
+              
+              <Box sx={{ 
+                p: 3, 
+                backgroundColor: 'background.paper',
+                borderTop: '1px solid',
+                borderColor: 'divider'
+              }}>
+                <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                  {selectedPhoto.originalName}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Chip
+                    icon={selectedPhoto.isPublic ? <Public /> : <Lock />}
+                    label={selectedPhoto.isPublic ? t('gallery.public') : t('gallery.private')}
+                    size="small"
+                    color={selectedPhoto.isPublic ? "success" : "default"}
+                    variant="outlined"
+                  />
+                  {selectedPhoto.owner && (
+                    <Typography variant="body2" color="text.secondary">
+                      {t('gallery.uploadedBy')}: {selectedPhoto.owner.name}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </PhotoModal>
 
         <Dialog 
           open={!!deleteId} 

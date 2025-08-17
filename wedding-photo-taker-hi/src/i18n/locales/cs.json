@@ -48,13 +48,13 @@
     "dragDrop": "Přetáhněte fotografie sem nebo klikněte pro výběr",
     "dragDropActive": "Pusťte fotografie zde",
     "selectFiles": "Vybrat soubory",
-    "supportedFormats": "Podporované formáty: Obrázky a videa (Max 10MB na soubor)",
+    "supportedFormats": "Podporované formáty: Obrázky a videa (Max 100MB na soubor)",
     "publicPhoto": "Veřejná fotografie",
     "privatePhoto": "Soukromá fotografie",
     "uploading": "Nahrávání...",
     "uploadSuccess": "Nahrání bylo úspěšné!",
     "uploadFailed": "Nahrání se nezdařilo. Zkuste to prosím znovu.",
-    "fileTooLarge": "Soubor {{fileName}} je příliš velký. Maximální velikost je 10MB.",
+    "fileTooLarge": "Soubor {{fileName}} je příliš velký. Maximální velikost je 100MB.",
     "invalidFormat": "Nepodporovaný formát souboru."
   },
   "camera": {
@@ -78,7 +78,9 @@
     "deleteMessage": "Tato akce je nevratná.",
     "deleteSuccess": "Fotografie byla smazána",
     "deleteFailed": "Smazání se nezdařilo",
-    "imageNotFound": "Obrázek nenalezen"
+    "imageNotFound": "Obrázek nenalezen",
+    "viewFullSize": "Zobrazit v plné velikosti",
+    "uploadedBy": "Nahrál"
   },
   "admin": {
     "title": "Správa fotografií",

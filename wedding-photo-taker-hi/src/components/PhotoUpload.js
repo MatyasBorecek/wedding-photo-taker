@@ -102,7 +102,7 @@ const PhotoUpload = () => {
       setUploading(true);
       for (const file of acceptedFiles) {
         // Check file size before uploading
-        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        if (file.size > 100 * 1024 * 1024) { // 100MB limit
           throw new Error(t('upload.fileTooLarge', { fileName: file.name }));
         }
 
@@ -225,6 +225,17 @@ const PhotoUpload = () => {
               }}
             >
               {t('upload.supportedFormats')}
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                mt: 1, 
+                color: 'text.secondary',
+                fontSize: '0.875rem',
+                opacity: 0.8
+              }}
+            >
+              JPG, PNG, GIF, WebP, MP4, MOV, AVI, WebM
             </Typography>
           </DropzoneContainer>
         </Paper>

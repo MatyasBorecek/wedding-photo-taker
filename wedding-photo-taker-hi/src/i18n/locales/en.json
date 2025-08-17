@@ -48,13 +48,13 @@
     "dragDrop": "Drag & drop photos or click to select",
     "dragDropActive": "Drop photos here",
     "selectFiles": "Select Files",
-    "supportedFormats": "Supported formats: Images and videos (Max 10MB per file)",
+    "supportedFormats": "Supported formats: Images and videos (Max 100MB per file)",
     "publicPhoto": "Public Photo",
     "privatePhoto": "Private Photo",
     "uploading": "Uploading...",
     "uploadSuccess": "Upload successful!",
     "uploadFailed": "Upload failed. Please try again.",
-    "fileTooLarge": "File {{fileName}} is too large. Maximum size is 10MB.",
+    "fileTooLarge": "File {{fileName}} is too large. Maximum size is 100MB.",
     "invalidFormat": "Unsupported file format."
   },
   "camera": {
@@ -78,7 +78,9 @@
     "deleteMessage": "This action cannot be undone.",
     "deleteSuccess": "Photo deleted successfully",
     "deleteFailed": "Delete failed",
-    "imageNotFound": "Image Not Found"
+    "imageNotFound": "Image Not Found",
+    "viewFullSize": "View Full Size",
+    "uploadedBy": "Uploaded by"
   },
   "admin": {
     "title": "Photo Management",
