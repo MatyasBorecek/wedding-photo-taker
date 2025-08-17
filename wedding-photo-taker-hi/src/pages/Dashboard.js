@@ -95,11 +95,11 @@ const Dashboard = () => {
       icon: <CloudUpload />, 
       component: <PhotoUpload /> 
     },
-    { 
-      label: t('navigation.camera'), 
-      icon: <CameraAlt />, 
-      component: <CameraCapture /> 
-    },
+    //{
+    //  label: t('navigation.camera'),
+    //  icon: <CameraAlt />,
+    //  component: <CameraCapture />
+    //},
     { 
       label: t('navigation.gallery'), 
       icon: <PhotoLibrary />, 

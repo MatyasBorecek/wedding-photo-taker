@@ -463,7 +463,7 @@ const AdminPanel = () => {
                   maxHeight: '70vh',
                   display: 'block'
                 }}
-        \      />
+              />
             )}
             
             <Box sx={{ 
